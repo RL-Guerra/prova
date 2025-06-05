@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { Button, View, Text, StyleSheet, ActivityIndicator } from "react-native";
 
+// --- DEFINIÇÃO DE TIPO PARA A PIADA ---
 type Joke = {
     type: 'single' | 'twopart';
     jokes: string;
     setup: string;
     delivery: string;
+    flags: {
+        nsfw: boolean;
+        religious: boolean;
+        political: boolean;
+        racist: boolean;
+        sexist: boolean;
+        explicit: boolean;
+    };
 };
 
 export const Piadas = () => {
@@ -14,30 +23,27 @@ export const Piadas = () => {
     const [erro, setErro] = useState<string | null>(null);
 
     const buscarPiada = async () => {
-        setCarregando(true);
+        setCarregando(true); 
         setErro(null);
         setPiada(null);
 
         try {
-            // A URL da API para piadas em português
             const response = await fetch('https://v2.jokeapi.dev/joke/Any?lang=pt');
-            const data: Joke = await response.json();
             
-            // Sucesso! Armazena a piada no estado
+            const data: Joke = await response.json();
+            console.log("Dados recebidos da API:", data); // Log para depuração
+            
             setPiada(data);
 
         } catch (e: any) {
-            // Captura erros de rede ou da lógica acima
             setErro('Falha ao buscar piada. Tente novamente.');
-            console.error(e);
+            console.error("Erro ao buscar piada:", e); // Log para depuração.
         } finally {
-            // Garante que o loading sempre vai parar
             setCarregando(false);
         }
     };
 
     // --- FUNÇÃO PARA RENDERIZAR O CONTEÚDO DA PIADA ---
-    // Separa a lógica de como exibir a piada do resto do componente
     const renderizarConteudoPiada = () => {
         if (carregando) {
             return <ActivityIndicator size="large" color="#007AFF" />;
@@ -51,7 +57,6 @@ export const Piadas = () => {
             return <Text style={styles.placeholder}>Clique no botão para ver uma piada!</Text>;
         }
 
-        // Renderiza a piada de acordo com o seu tipo
         if (piada.type === 'single') {
             return <Text style={styles.jokeText}>{piada.jokes}</Text>;
         }
@@ -65,10 +70,10 @@ export const Piadas = () => {
             );
         }
         
-        // Caso a API retorne um tipo inesperado
         return <Text style={styles.placeholder}>Tipo de piada não suportado.</Text>;
     };
 
+    // --- RENDERIZAÇÃO A TELA) ---
     return (
         <View style={styles.container}>
             <View style={styles.jokeContainer}>
