@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { Button, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
 
 // --- DEFINIÇÃO DE TIPO PARA A PIADA ---
 type Joke = {
@@ -80,11 +80,11 @@ export const Piadas = () => {
                 {renderizarConteudoPiada()}
             </View>
 
-            <Button
-                title="Ver piada"
-                onPress={buscarPiada}
-                disabled={carregando}
-            />
+            <TouchableOpacity style={styles.button}
+            onPress={buscarPiada}
+            disabled={carregando}>
+                <Text style={styles.textButton}>Ver Piada</Text>
+                </TouchableOpacity>
         </View>
     );
 };
@@ -96,6 +96,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         backgroundColor: 'gray',
+    },
+    button: {
+        padding: 10,
+        backgroundColor: '#001801',
+        borderRadius: 50,
+        borderWidth: 1,
+        borderColor: '#4b0082',
+        shadowColor: '#000',
+    },
+    textButton: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     jokeContainer: {
         minHeight: 200,
